@@ -1,0 +1,217 @@
+
+.navbar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2c3e50; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 0 15px;
+}
+
+.nav-container {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+/* Desktop layout - horizontal */
+@media (min-width: 993px) {
+    .nav-container {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 0;
+    }
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+@media (min-width: 993px) {
+    .nav-brand {
+        margin-bottom: 0;
+    }
+}
+
+.nav-brand i {
+    font-size: 1.8rem;
+    color: #3498db;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.nav-item {
+    margin: 2px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    color: #ecf0f1;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Icon-only on smallest screens */
+.nav-link span {
+    display: inline;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateY(-2px); 
+}
+
+.nav-item.active .nav-link {
+    background-color: #3498db;
+    color: white;
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+
+/* Large tablets and small desktops */
+@media (max-width: 1200px) {
+    .nav-link {
+        padding: 5px 8px;
+        font-size: 0.85rem;
+        gap: 4px;
+    }
+    
+    .nav-link i {
+        font-size: 0.9rem;
+    }
+}
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 0 10px;
+    }
+    
+    .nav-container {
+        padding: 8px 0;
+    }
+    
+    .nav-brand {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+    
+    .nav-brand i {
+        font-size: 1.5rem;
+    }
+    
+    .nav-menu {
+        gap: 3px;
+        width: 100%;
+    }
+    
+    .nav-link {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+        border-radius: 15px;
+    }
+    
+    /* Show full text on tablets */
+    .nav-link span {
+        display: inline;
+    }
+}
+
+/* Mobile phones - landscape and large phones */
+@media (max-width: 768px) {
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+    
+    .nav-brand i {
+        font-size: 1.3rem;
+    }
+    
+    .nav-link {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+        gap: 3px;
+    }
+    
+    .nav-link i {
+        font-size: 0.8rem;
+    }
+}
+
+/* Small mobile phones */
+@media (max-width: 576px) {
+    .nav-container {
+        padding: 5px 0;
+    }
+    
+    .nav-brand {
+        font-size: 1.1rem;
+    }
+    
+    .nav-brand i {
+        font-size: 1.2rem;
+    }
+    
+    .nav-menu {
+        gap: 2px;
+    }
+    
+    .nav-link {
+        padding: 4px 5px;
+        font-size: 0.7rem;
+        border-radius: 12px;
+    }
+    
+    /* On very small screens, hide text, show only icons */
+    .nav-link span {
+        display: none;
+    }
+    
+    .nav-link i {
+        font-size: 1rem;
+        margin: 0;
+    }
+    
+    /* Adjust active state for icon-only */
+    .nav-item.active .nav-link {
+        background-color: #3498db;
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 380px) {
+    .nav-link {
+        padding: 4px;
+    }
+    
+    .nav-link i {
+        font-size: 0.9rem;
+    }
+}
