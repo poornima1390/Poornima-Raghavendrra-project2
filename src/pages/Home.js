@@ -10,7 +10,7 @@ const Home = () => {
           <h1 className="hero-title">Sudoku</h1>
           <p className="hero-subtitle">Test Your Logic. Master The Grid.</p>
           
-          {/* Image from Assignment 1 */}
+          
           <img 
             src="https://cdn.pixabay.com/photo/2017/02/05/17/28/relaxation-2040676_1280.jpg"
             alt="Sudoku puzzle illustration"

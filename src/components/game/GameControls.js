@@ -1,15 +1,12 @@
 import React from 'react';
-import { useSudoku } from '../../context/SudokuContext';
-import { ACTIONS } from '../../context/SudokuContext';
-import { useTimer } from '../../hooks/useTimer';
+import { useSudoku, ACTIONS } from '../../context/SudokuContext';
+import HintButton from './HintButton';
 
-const GameControls = ({ difficulty }) => {
+const GameControls = () => {
   const { dispatch } = useSudoku();
-  const { resetTimer } = useTimer();
 
   const handleNewGame = () => {
     dispatch({ type: ACTIONS.NEW_GAME });
-    resetTimer();
   };
 
   const handleReset = () => {
@@ -26,6 +23,7 @@ const GameControls = ({ difficulty }) => {
         <i className="fas fa-redo-alt"></i>
         Reset
       </button>
+      <HintButton />
     </div>
   );
 };

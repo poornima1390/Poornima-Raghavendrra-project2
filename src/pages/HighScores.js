@@ -6,7 +6,7 @@ const HighScores = () => {
     { rank: 1, username: 'MasterKenji', puzzles: 2847, time: '3:42', accuracy: '99.8%', streak: '365 days' },
     { rank: 2, username: 'SudokuLegend', puzzles: 2356, time: '4:15', accuracy: '98.5%', streak: '342 days' },
     { rank: 3, username: 'NumberNinja', puzzles: 2156, time: '4:38', accuracy: '97.9%', streak: '298 days' },
-    // Add all scores from Assignment 1
+    
   ];
 
   return (

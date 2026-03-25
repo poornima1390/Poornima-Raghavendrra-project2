@@ -4,7 +4,7 @@ import '../styles/Auth.css';
 const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Non-functional - just for mock
+    
     console.log('Register submitted (mock)');
   };
 

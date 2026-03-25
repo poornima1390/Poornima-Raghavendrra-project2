@@ -308,3 +308,25 @@
     font-size: 0.8rem;
   }
 }
+
+/* Hint highlight animation */
+.grid-cell-input.hint-highlight {
+  animation: hintPulse 0.5s ease-in-out 3;
+  background-color: #fff3cd !important;
+  box-shadow: 0 0 0 3px #ffc107 !important;
+}
+
+@keyframes hintPulse {
+  0% {
+    transform: scale(1);
+    background-color: #fff3cd;
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: #ffeaa7;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #fff3cd;
+  }
+}

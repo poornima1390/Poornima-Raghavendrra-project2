@@ -1,21 +1,30 @@
 import React, { useEffect } from 'react';
-import { useSudoku } from '../context/SudokuContext';
-import { ACTIONS } from '../context/SudokuContext';
+import { useSudoku, ACTIONS } from '../context/SudokuContext';
 import SudokuGrid from '../components/game/SudokuGrid';
 import Timer from '../components/game/Timer';
 import GameControls from '../components/game/GameControls';
 import '../styles/SudokuGrid.css';
 
 const EasyGame = () => {
-  const { state, dispatch } = useSudoku();
+  const { state, dispatch, currentGame } = useSudoku();
   
+  // Switch to easy game mode when component mounts
   useEffect(() => {
-    // Set difficulty to easy when page loads
-    dispatch({ type: ACTIONS.SET_DIFFICULTY, payload: 'easy' });
-  }, [dispatch]);
+    if (state.currentDifficulty !== 'easy') {
+      console.log('Switching to easy game mode');
+      dispatch({ type: ACTIONS.SWITCH_GAME, payload: 'easy' });
+    }
+  }, [dispatch, state.currentDifficulty]);
   
-  if (!state.board) {
-    return <div className="loading">Loading...</div>;
+  // Show loading state
+  if (!currentGame?.board) {
+    return <div className="loading">Loading puzzle...</div>;
+  }
+  
+  // Verify this is a 6x6 board (easy mode)
+  if (currentGame.board.length !== 6) {
+    console.log('Board size mismatch, reloading...');
+    return <div className="loading">Loading 6x6 puzzle...</div>;
   }
   
   return (
@@ -31,18 +40,18 @@ const EasyGame = () => {
           <i className="fas fa-seedling"></i>
           <span>Easy Mode • 6x6</span>
         </div>
-        <GameControls difficulty="easy" />
+        <GameControls />
       </div>
       
       <div className="game-container">
         <SudokuGrid 
-          board={state.board} 
-          initialBoard={state.initialBoard} 
+          board={currentGame.board} 
+          initialBoard={currentGame.initialBoard} 
           size={6}
         />
       </div>
       
-      {state.gameWon && (
+      {currentGame.gameWon && (
         <div className="congratulations-message">
           <i className="fas fa-trophy"></i>
           <h2>Congratulations!</h2>

@@ -1,21 +1,30 @@
 import React, { useEffect } from 'react';
-import { useSudoku } from '../context/SudokuContext';
-import { ACTIONS } from '../context/SudokuContext';
+import { useSudoku, ACTIONS } from '../context/SudokuContext';
 import SudokuGrid from '../components/game/SudokuGrid';
 import Timer from '../components/game/Timer';
 import GameControls from '../components/game/GameControls';
 import '../styles/SudokuGrid.css';
 
 const NormalGame = () => {
-  const { state, dispatch } = useSudoku();
+  const { state, dispatch, currentGame } = useSudoku();
   
+  // Switch to normal game mode when component mounts
   useEffect(() => {
-    // Set difficulty to normal when page loads
-    dispatch({ type: ACTIONS.SET_DIFFICULTY, payload: 'normal' });
-  }, [dispatch]);
+    if (state.currentDifficulty !== 'normal') {
+      console.log('Switching to normal game mode');
+      dispatch({ type: ACTIONS.SWITCH_GAME, payload: 'normal' });
+    }
+  }, [dispatch, state.currentDifficulty]);
   
-  if (!state.board) {
-    return <div className="loading">Loading...</div>;
+  // Show loading state
+  if (!currentGame?.board) {
+    return <div className="loading">Loading puzzle...</div>;
+  }
+  
+  // Verify this is a 9x9 board (normal mode)
+  if (currentGame.board.length !== 9) {
+    console.log('Board size mismatch, reloading...');
+    return <div className="loading">Loading 9x9 puzzle...</div>;
   }
   
   return (
@@ -31,18 +40,18 @@ const NormalGame = () => {
           <i className="fas fa-fire"></i>
           <span>Normal Mode • 9x9</span>
         </div>
-        <GameControls difficulty="normal" />
+        <GameControls />
       </div>
       
       <div className="game-container">
         <SudokuGrid 
-          board={state.board} 
-          initialBoard={state.initialBoard} 
+          board={currentGame.board} 
+          initialBoard={currentGame.initialBoard} 
           size={9}
         />
       </div>
       
-      {state.gameWon && (
+      {currentGame.gameWon && (
         <div className="congratulations-message">
           <i className="fas fa-trophy"></i>
           <h2>Congratulations!</h2>

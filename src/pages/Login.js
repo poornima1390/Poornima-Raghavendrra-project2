@@ -4,7 +4,7 @@ import '../styles/Auth.css';
 const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Non-functional - just for mock
+    
     console.log('Login submitted (mock)');
   };
 

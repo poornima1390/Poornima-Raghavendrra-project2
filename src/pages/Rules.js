@@ -133,7 +133,7 @@ const Rules = () => {
             </div>
         </section>
         
-        {/* Credits Section */}
+        
         <div id="credits" className="credits-section">
           <h2 className="credits-title">
             Credits

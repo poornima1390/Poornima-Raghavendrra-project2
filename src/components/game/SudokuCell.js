@@ -1,28 +1,25 @@
 import React from 'react';
-import { useSudoku } from '../../context/SudokuContext';
-import { ACTIONS } from '../../context/SudokuContext';
+import { useSudoku, ACTIONS } from '../../context/SudokuContext';
 import { isCellInvalid } from '../../utils/validators';
 
 const SudokuCell = ({ row, col, value, isPrefilled, size }) => {
-  const { state, dispatch } = useSudoku();
-  const { selectedCell, board } = state;
-
-  // Add safety check for board
-  if (!board || !board[row]) {
-    return <div className="grid-cell-input loading-cell"></div>;
-  }
+  const { state, dispatch, currentGame } = useSudoku();
   
-  const isSelected = selectedCell?.row === row && selectedCell?.col === col;
-  const isInvalid = isCellInvalid(board, row, col, size);
+  const isSelected = currentGame?.selectedCell?.row === row && 
+                     currentGame?.selectedCell?.col === col;
+  
+  
+  const isInvalid = !isPrefilled && value && currentGame?.board && 
+                    isCellInvalid(currentGame.board, row, col, size);
   
   const handleClick = () => {
-    if (!isPrefilled && !state.gameWon) {
+    if (!isPrefilled && !currentGame?.gameWon) {
       dispatch({ type: ACTIONS.SELECT_CELL, payload: { row, col } });
     }
   };
   
   const handleChange = (e) => {
-    if (isPrefilled || state.gameWon) return;
+    if (isPrefilled || currentGame?.gameWon) return;
     
     let newValue = e.target.value;
     
@@ -39,7 +36,7 @@ const SudokuCell = ({ row, col, value, isPrefilled, size }) => {
     }
   };
   
-  const displayValue = value === null || value === 0 ? '' : value;
+  const displayValue = value === null || value === 0 || value === '' ? '' : value;
   
   return (
     <input
@@ -48,8 +45,10 @@ const SudokuCell = ({ row, col, value, isPrefilled, size }) => {
       value={displayValue}
       onClick={handleClick}
       onChange={handleChange}
-      disabled={isPrefilled || state.gameWon}
+      disabled={isPrefilled || currentGame?.gameWon}
       maxLength={1}
+      data-row={row}
+      data-col={col}
     />
   );
 };

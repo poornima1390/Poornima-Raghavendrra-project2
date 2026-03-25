@@ -5,7 +5,6 @@ export const generateEmptyBoard = (size = 9) => {
 
 // Check if a number placement is valid
 export const isValidPlacement = (board, row, col, num, size) => {
-  // Add null/undefined checks
   if (!board || !board[row]) return false;
   if (num === null || num === 0 || num === '') return true;
   
@@ -52,8 +51,8 @@ export const isBoardComplete = (board, size) => {
   return true;
 };
 
-// Generate a complete solved Sudoku board (backtracking)
-const solveSudoku = (board, size) => {
+// BACKTRACKING SOLVER - finds a solution for the board
+export const solveSudoku = (board, size) => {
   const subgridRows = size === 9 ? 3 : 2;
   const subgridCols = size === 9 ? 3 : 3;
   
@@ -116,46 +115,129 @@ const solveSudoku = (board, size) => {
     return false;
   };
   
-  solve();
-  return board;
+  const solved = solve();
+  return solved ? board : null;
 };
 
-// Generate a puzzle by removing cells from a solved board
-const removeCells = (board, cellsToRemove, size) => {
-  const puzzle = board.map(row => [...row]);
-  let removed = 0;
+// Check if a puzzle has a unique solution (for backtracking verification)
+export const hasUniqueSolution = (board, size) => {
+  let solutionCount = 0;
+  const tempBoard = copyBoard(board);
   
-  while (removed < cellsToRemove) {
-    const row = Math.floor(Math.random() * size);
-    const col = Math.floor(Math.random() * size);
+  const countSolutions = (board) => {
+    const subgridRows = size === 9 ? 3 : 2;
+    const subgridCols = size === 9 ? 3 : 3;
     
-    if (puzzle[row][col] !== null) {
-      puzzle[row][col] = null;
-      removed++;
+    const findEmpty = () => {
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          if (board[i][j] === null || board[i][j] === 0) {
+            return [i, j];
+          }
+        }
+      }
+      return null;
+    };
+    
+    const isValid = (num, row, col) => {
+      for (let x = 0; x < size; x++) {
+        if (board[row][x] === num) return false;
+      }
+      for (let x = 0; x < size; x++) {
+        if (board[x][col] === num) return false;
+      }
+      const startRow = Math.floor(row / subgridRows) * subgridRows;
+      const startCol = Math.floor(col / subgridCols) * subgridCols;
+      for (let i = 0; i < subgridRows; i++) {
+        for (let j = 0; j < subgridCols; j++) {
+          if (board[startRow + i][startCol + j] === num) return false;
+        }
+      }
+      return true;
+    };
+    
+    const solve = () => {
+      const empty = findEmpty();
+      if (!empty) {
+        solutionCount++;
+        return solutionCount <= 2;
+      }
+      
+      const [row, col] = empty;
+      for (let num = 1; num <= size; num++) {
+        if (isValid(num, row, col)) {
+          board[row][col] = num;
+          if (!solve()) return false;
+          board[row][col] = null;
+          if (solutionCount > 1) return false;
+        }
+      }
+      return true;
+    };
+    
+    solve();
+    return solutionCount;
+  };
+  
+  countSolutions(tempBoard);
+  return solutionCount === 1;
+};
+
+// Generate puzzle by removing cells from a solved board (ensures unique solution)
+export const removeCellsWithUniqueSolution = (solvedBoard, cellsToKeep, size) => {
+  const puzzle = solvedBoard.map(row => [...row]);
+  const totalCells = size * size;
+  let cellsToRemove = totalCells - cellsToKeep;
+  
+  // Create list of all cell positions
+  const positions = [];
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      positions.push([i, j]);
+    }
+  }
+  
+  // Shuffle positions
+  for (let i = positions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [positions[i], positions[j]] = [positions[j], positions[i]];
+  }
+  
+  // Remove cells while ensuring unique solution
+  for (let [row, col] of positions) {
+    if (cellsToRemove <= 0) break;
+    
+    const originalValue = puzzle[row][col];
+    puzzle[row][col] = null;
+    cellsToRemove--;
+    
+    // Check if puzzle still has unique solution
+    if (!hasUniqueSolution(puzzle, size)) {
+      // Restore if no longer unique
+      puzzle[row][col] = originalValue;
+      cellsToRemove++;
     }
   }
   
   return puzzle;
 };
 
-// Generate normal puzzle (9x9, 28-30 filled cells)
+// Generate normal puzzle (9x9, 28-30 filled cells) with unique solution
 export const generateNormalPuzzle = () => {
   const size = 9;
   const emptyBoard = generateEmptyBoard(size);
   const solvedBoard = solveSudoku(emptyBoard, size);
-  const cellsToFill = Math.floor(Math.random() * 3) + 28; // 28-30 cells
-  const cellsToRemove = (size * size) - cellsToFill;
-  return removeCells(solvedBoard, cellsToRemove, size);
+  const cellsToKeep = Math.floor(Math.random() * 3) + 28; // 28-30 cells
+  return removeCellsWithUniqueSolution(solvedBoard, cellsToKeep, size);
 };
 
-// Generate easy puzzle (6x6, half board filled = 18 cells)
+// Generate easy puzzle (6x6, 18 filled cells) with unique solution
 export const generateEasyPuzzle = () => {
   const size = 6;
   const emptyBoard = generateEmptyBoard(size);
   const solvedBoard = solveSudoku(emptyBoard, size);
-  const cellsToFill = 18; // Half of 36
-  const cellsToRemove = (size * size) - cellsToFill;
-  return removeCells(solvedBoard, cellsToRemove, size);
+  const cellsToKeep = 18; // Half of 36
+  return removeCellsWithUniqueSolution(solvedBoard, cellsToKeep, size);
 };
 
 // Deep copy a board
